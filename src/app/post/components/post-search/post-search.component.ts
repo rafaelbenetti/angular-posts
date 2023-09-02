@@ -9,7 +9,6 @@ export class PostSearchComponent {
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
   onSearch(event: any): void {
-    console.log('here', event.target.value);
     this.search.emit(event.target.value);
   }
 }
