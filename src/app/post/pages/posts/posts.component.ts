@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store, select } from '@ngrx/store';
-import { Subject, combineLatest, map, tap } from 'rxjs';
+import { Subject, combineLatest, debounceTime, map, tap } from 'rxjs';
 import * as PostActions from '../../post.action';
 import { selectLoading, selectPosts } from '../../post.reducer';
 
@@ -29,6 +29,7 @@ export class PostsComponent {
   ngOnInit(): void {
     this.searchParams$
       .pipe(
+        debounceTime(500),
         tap((params) => {
           this.store.dispatch(PostActions.loadAll({ ...params }));
         })

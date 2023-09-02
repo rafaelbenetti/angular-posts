@@ -56,15 +56,26 @@ export class PostService {
         variables: {
           options: {
             paginate: {
-              page,
-              limit,
+              page: query ? 0 : page,
+              limit: query ? 100 : limit,
             },
           },
         },
       })
       .valueChanges.pipe(
         map((value) => {
-          return value.data.posts.data;
+          // TODO: Move the search by query to the backend/graphql
+          const posts = value.data.posts.data;
+          if (query) {
+            const filteredResults = posts.filter((post: Post) => {
+              return post.title.includes(query) || post.body.includes(query);
+            });
+
+            if (filteredResults.length <= limit) return filteredResults;
+
+            return filteredResults.slice(0, limit);
+          }
+          return posts;
         })
       );
   }
